@@ -1,0 +1,46 @@
+﻿# Data files (large, regenerable)
+data/raw/**/*.csv
+data/raw/**/*.parquet
+data/raw/**/*.xlsx
+data/processed/
+
+# Models (large binary files - use DVC instead)
+models/*.pkl
+models/*.h5
+models/*.pt
+models/*.joblib
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables (NEVER version-control secrets!)
+.env
+.env.local
+
+# Logs
+logs/
+*.log

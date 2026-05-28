@@ -23,30 +23,57 @@ Source: Telco Customer Churn (Kaggle / UCI ML Repository)
 ## Project Structure
 
 data/
-  raw/                          # Original customer data (never modify)
-  processed/                    # Cleaned data ready for modeling
-notebooks/
-  01_exploratory_data_analysis.ipynb      # Load, visualize, understand data
-  02_feature_engineering.ipynb             # Preprocessing, model training
-  03_deployment_guide.ipynb                # Hugging Face Spaces setup
-src/
-  __init__.py
-  preprocessing.py              # Reusable preprocessing functions
-  model.py                      # ChurnPredictor class
-  utils.py                      # Helper functions
-app/
-  main.py                       # FastAPI application
-models/
-  best_model.pkl                # Trained model
-  scaler.pkl                    # Fitted StandardScaler
-  encoder.pkl                   # Fitted categorical encoder
-  model_card.md                 # Model performance metrics
-tests/
-  __init__.py
-requirements.txt                  # Python dependencies
-README.md                         # This file
-ARCHITECTURE.md                   # Data flow & design decisions
-
+├── raw/
+│   └── # Original customer data (never modify)
+│
+├── processed/
+│   └── # Cleaned data ready for modeling
+│
+├── notebooks/
+│   ├── 01_exploratory_data_analysis.ipynb
+│   │   └── # Load, visualize, understand data
+│   │
+│   ├── 02_feature_engineering.ipynb
+│   │   └── # Preprocessing, model training
+│   │
+│   └── 03_deployment_guide.ipynb
+│       └── # Hugging Face Spaces setup
+│
+├── src/
+│   ├── __init__.py
+│   ├── preprocessing.py
+│   │   └── # Reusable preprocessing functions
+│   ├── model.py
+│   │   └── # ChurnPredictor class
+│   └── utils.py
+│       └── # Helper functions
+│
+├── app/
+│   └── main.py
+│       └── # FastAPI application
+│
+├── models/
+│   ├── best_model.pkl
+│   │   └── # Trained model
+│   ├── scaler.pkl
+│   │   └── # Fitted StandardScaler
+│   ├── encoder.pkl
+│   │   └── # Fitted categorical encoder
+│   └── model_card.md
+│       └── # Model performance metrics
+│
+├── tests/
+│   └── __init__.py
+│
+├── requirements.txt
+│   └── # Python dependencies
+│
+├── README.md
+│   └── # This file
+│
+└── ARCHITECTURE.md
+    └── # Data flow & design decisions
+    
 ## Quick Start
 
 Prerequisites

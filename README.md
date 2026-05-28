@@ -22,6 +22,7 @@ Source: Telco Customer Churn (Kaggle / UCI ML Repository)
 
 ## Project Structure
 
+```text
 data/
 ├── raw/
 │   └── # Original customer data (never modify)
@@ -32,10 +33,8 @@ data/
 ├── notebooks/
 │   ├── 01_exploratory_data_analysis.ipynb
 │   │   └── # Load, visualize, understand data
-│   │
 │   ├── 02_feature_engineering.ipynb
 │   │   └── # Preprocessing, model training
-│   │
 │   └── 03_deployment_guide.ipynb
 │       └── # Hugging Face Spaces setup
 │
@@ -73,6 +72,7 @@ data/
 │
 └── ARCHITECTURE.md
     └── # Data flow & design decisions
+```
     
 ## Quick Start
 

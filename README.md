@@ -22,30 +22,57 @@ Source: Telco Customer Churn (Kaggle / UCI ML Repository)
 
 ## Project Structure
 
+```text
 data/
-  raw/                          # Original customer data (never modify)
-  processed/                    # Cleaned data ready for modeling
-notebooks/
-  01_exploratory_data_analysis.ipynb      # Load, visualize, understand data
-  02_feature_engineering.ipynb             # Preprocessing, model training
-  03_deployment_guide.ipynb                # Hugging Face Spaces setup
-src/
-  __init__.py
-  preprocessing.py              # Reusable preprocessing functions
-  model.py                      # ChurnPredictor class
-  utils.py                      # Helper functions
-app/
-  main.py                       # FastAPI application
-models/
-  best_model.pkl                # Trained model
-  scaler.pkl                    # Fitted StandardScaler
-  encoder.pkl                   # Fitted categorical encoder
-  model_card.md                 # Model performance metrics
-tests/
-  __init__.py
-requirements.txt                  # Python dependencies
-README.md                         # This file
-ARCHITECTURE.md                   # Data flow & design decisions
+├── raw/
+│   └── # Original customer data (never modify)
+│
+├── processed/
+│   └── # Cleaned data ready for modeling
+│
+├── notebooks/
+│   ├── 01_exploratory_data_analysis.ipynb
+│   │   └── # Load, visualize, understand data
+│   ├── 02_feature_engineering.ipynb
+│   │   └── # Preprocessing, model training
+│   └── 03_deployment_guide.ipynb
+│       └── # Hugging Face Spaces setup
+│
+├── src/
+│   ├── __init__.py
+│   ├── preprocessing.py
+│   │   └── # Reusable preprocessing functions
+│   ├── model.py
+│   │   └── # ChurnPredictor class
+│   └── utils.py
+│       └── # Helper functions
+│
+├── app/
+│   └── main.py
+│       └── # FastAPI application
+│
+├── models/
+│   ├── best_model.pkl
+│   │   └── # Trained model
+│   ├── scaler.pkl
+│   │   └── # Fitted StandardScaler
+│   ├── encoder.pkl
+│   │   └── # Fitted categorical encoder
+│   └── model_card.md
+│       └── # Model performance metrics
+│
+├── tests/
+│   └── __init__.py
+│
+├── requirements.txt
+│   └── # Python dependencies
+│
+├── README.md
+│   └── # This file
+│
+└── ARCHITECTURE.md
+    └── # Data flow & design decisions
+```
 
 ## Quick Start
 
@@ -73,20 +100,25 @@ Local Setup
    pip install -r requirements.txt
 
 5. Download the dataset:
-   - Download from Kaggle Telco Customer Churn
+   - Go to kaggle.com and search "Telco Customer Churn" by blastchar
+   - Download the CSV directly from the dataset page
    - Place WA_Fn-UseC_-Telco-Customer-Churn.csv in data/raw/
 
 ## Workflow
 
-Phase 1: Exploratory Data Analysis
+Phase 1: Exploratory Data Analysis ✅ In Progress
 
 jupyter notebook
 # Open notebooks/01_exploratory_data_analysis.ipynb
 
-- Load and inspect raw data
+- Load and inspect raw data — use ../data/raw/ as path (notebook runs from notebooks/ directory)
 - Visualize feature distributions
 - Identify missing values and outliers
 - Analyze churn patterns and correlations
+
+Notes:
+- Dataset: WA_Fn-UseC_-Telco-Customer-Churn.csv (~7,000 rows, 21 columns)
+- When loading CSV from notebook, use relative path: '../data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv'
 
 Phase 2: Feature Engineering & Model Training
 

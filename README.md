@@ -73,11 +73,7 @@ data/
 └── ARCHITECTURE.md
     └── # Data flow & design decisions
 ```
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> c6edbc80cccd51cc2e1acf5d20e4e5a162f9c9c1
 ## Quick Start
 
 Prerequisites

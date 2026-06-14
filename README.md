@@ -106,30 +106,33 @@ Local Setup
 
 ## Workflow
 
-Phase 1: Exploratory Data Analysis ✅ In Progress
+Phase 1: Exploratory Data Analysis ✅ Complete
 
 jupyter notebook
 # Open notebooks/01_exploratory_data_analysis.ipynb
 
-- Load and inspect raw data — use ../data/raw/ as path (notebook runs from notebooks/ directory)
-- Visualize feature distributions
-- Identify missing values and outliers
-- Analyze churn patterns and correlations
+Key findings:
+- Dataset: 7,043 customers, 21 features
+- Churn rate: 26.5% (mild class imbalance)
+- TotalCharges stored as string — must convert to numeric before modeling (small number of rows with empty strings dropped)
+- Contract type and OnlineSecurity are strongest predictors of churn (Cramér's V)
+- tenure negatively correlated with churn — longer-tenured customers less likely to leave
+- MonthlyCharges positively correlated with churn
 
-Notes:
-- Dataset: WA_Fn-UseC_-Telco-Customer-Churn.csv (~7,000 rows, 21 columns)
-- When loading CSV from notebook, use relative path: '../data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv'
-
-Phase 2: Feature Engineering & Model Training
+Phase 2: Feature Engineering & Model Training 🚧 In Progress
 
 jupyter notebook
 # Open notebooks/02_feature_engineering.ipynb
 
-- Handle missing values (imputation or removal)
-- Encode categorical variables (one-hot, label encoding)
-- Scale numerical features (StandardScaler)
-- Train & compare models: Logistic Regression, Random Forest, XGBoost
-- Perform hyperparameter tuning (GridSearchCV)
+Progress:
+- [x] Step 1: Load data, fix TotalCharges (numeric conversion), drop customerID
+- [x] Step 2: Encode target variable (Churn -> 0/1)
+- [ ] Step 3: One-hot encode categorical features
+- [ ] Step 4: Scale numerical features (StandardScaler)
+- [ ] Step 5: Train/test split (80/20, stratified)
+- [ ] Step 6: Train & compare models (Logistic Regression, Random Forest, Gradient Boosting)
+- [ ] Step 7: Hyperparameter tuning (GridSearchCV)
+- [ ] Step 8: Save model + preprocessing artifacts
 - Save best model and preprocessing artifacts
 
 Expected Performance:

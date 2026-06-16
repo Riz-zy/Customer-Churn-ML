@@ -127,12 +127,20 @@ jupyter notebook
 Progress:
 - [x] Step 1: Load data, fix TotalCharges (numeric conversion), drop customerID
 - [x] Step 2: Encode target variable (Churn -> 0/1)
-- [ ] Step 3: One-hot encode categorical features
-- [ ] Step 4: Scale numerical features (StandardScaler)
-- [ ] Step 5: Train/test split (80/20, stratified)
-- [ ] Step 6: Train & compare models (Logistic Regression, Random Forest, Gradient Boosting)
-- [ ] Step 7: Hyperparameter tuning (GridSearchCV)
+- [x] Step 3: One-hot encode categorical features (21 → 31 columns after encoding)
+- [x] Step 4: Scale numerical features (StandardScaler on tenure, MonthlyCharges, TotalCharges, SeniorCitizen)
+- [x] Step 5: Train/test split (80/20 stratified — 5,625 train / 1,407 test)
+- [x] Step 6a: Logistic Regression — complete
+- [ ] Step 6b: Random Forest
+- [ ] Step 6c: Gradient Boosting
+- [ ] Step 7: Hyperparameter tuning (GridSearchCV on best model)
 - [ ] Step 8: Save model + preprocessing artifacts
+
+Logistic Regression Results (with class_weight='balanced' + optimal threshold):
+- Best threshold: 0.513
+- Accuracy: 75.6%
+- Churn Precision: 0.53 | Recall: 0.80 | F1: 0.63
+- Note: plain LR had higher accuracy (79.8%) but poor churn recall (0.53) — class balancing improved recall significantly
 - Save best model and preprocessing artifacts
 
 Expected Performance:

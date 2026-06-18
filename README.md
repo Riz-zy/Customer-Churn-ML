@@ -131,16 +131,21 @@ Progress:
 - [x] Step 4: Scale numerical features (StandardScaler on tenure, MonthlyCharges, TotalCharges, SeniorCitizen)
 - [x] Step 5: Train/test split (80/20 stratified — 5,625 train / 1,407 test)
 - [x] Step 6a: Logistic Regression — complete
-- [ ] Step 6b: Random Forest
-- [ ] Step 6c: Gradient Boosting
-- [ ] Step 7: Hyperparameter tuning (GridSearchCV on best model)
+- [x] Step 6b: Random Forest — complete
+- [x] Step 6c: Gradient Boosting — complete
+- [ ] Step 7: Hyperparameter tuning (GridSearchCV on Gradient Boosting)
 - [ ] Step 8: Save model + preprocessing artifacts
 
-Logistic Regression Results (with class_weight='balanced' + optimal threshold):
-- Best threshold: 0.513
-- Accuracy: 75.6%
-- Churn Precision: 0.53 | Recall: 0.80 | F1: 0.63
-- Note: plain LR had higher accuracy (79.8%) but poor churn recall (0.53) — class balancing improved recall significantly
+Model Comparison (all with optimal threshold tuning):
+| Model               | Accuracy | Churn Recall | Churn F1 |
+|---------------------|----------|--------------|----------|
+| Logistic Regression | 75.6%    | 0.80         | 0.63     |
+| Random Forest       | 75.6%    | 0.80         | 0.64     |
+| Gradient Boosting   | 75.7%    | 0.81         | 0.64     |
+
+Winner: Gradient Boosting (marginal but consistent edge)
+Key finding: threshold optimization had more impact than model choice — all three converged to similar performance
+Top features (from RF importance): tenure, TotalCharges, Contract_Two year, MonthlyCharges, InternetService_Fiber optic
 - Save best model and preprocessing artifacts
 
 Expected Performance:

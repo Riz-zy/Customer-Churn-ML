@@ -119,7 +119,7 @@ Key findings:
 - tenure negatively correlated with churn — longer-tenured customers less likely to leave
 - MonthlyCharges positively correlated with churn
 
-Phase 2: Feature Engineering & Model Training 🚧 In Progress
+Phase 2: Feature Engineering & Model Training ✅ Complete
 
 jupyter notebook
 # Open notebooks/02_feature_engineering.ipynb
@@ -133,18 +133,29 @@ Progress:
 - [x] Step 6a: Logistic Regression — complete
 - [x] Step 6b: Random Forest — complete
 - [x] Step 6c: Gradient Boosting — complete
-- [ ] Step 7: Hyperparameter tuning (GridSearchCV on Gradient Boosting)
-- [ ] Step 8: Save model + preprocessing artifacts
+- [x] Step 7: Hyperparameter tuning (GridSearchCV on Gradient Boosting) — complete
+- [x] Step 8: Save model + preprocessing artifacts — complete
+
+Saved artifacts (models/):
+- best_model.pkl — Gradient Boosting (n_estimators=300, learning_rate=0.05, max_depth=3)
+- scaler.pkl — fitted StandardScaler (fit on raw tenure/MonthlyCharges/TotalCharges/SeniorCitizen)
+- feature_columns.pkl — list of 30 columns post one-hot-encoding, in training order (needed to align API input)
+- best_threshold.pkl — optimal decision threshold for best_model (~0.46, found via F1-maximization on precision-recall curve)
+- model_card.md — full model documentation (performance, comparison, design decisions)
 
 Model Comparison (all with optimal threshold tuning):
-| Model               | Accuracy | Churn Recall | Churn F1 |
-|---------------------|----------|--------------|----------|
-| Logistic Regression | 75.6%    | 0.80         | 0.63     |
-| Random Forest       | 75.6%    | 0.80         | 0.64     |
-| Gradient Boosting   | 75.7%    | 0.81         | 0.64     |
+| Model                              | Accuracy | Churn Recall | Churn F1 |
+|-------------------------------------|----------|--------------|----------|
+| Logistic Regression                | 75.6%    | 0.80         | 0.63     |
+| Random Forest                      | 75.6%    | 0.80         | 0.64     |
+| Gradient Boosting (manual params)  | 75.7%    | 0.81         | 0.64     |
+| Gradient Boosting (GridSearchCV)   | 76.0%    | 0.77         | 0.63     |
 
-Winner: Gradient Boosting (marginal but consistent edge)
-Key finding: threshold optimization had more impact than model choice — all three converged to similar performance
+Final model selected: Gradient Boosting with manual params (n_estimators=300, learning_rate=0.05, max_depth=3) — chosen over the GridSearchCV-tuned version because it had better recall/F1 on the test set.
+
+Key findings:
+- Threshold optimization had more impact on results than model choice — all four configurations converged to similar performance
+- GridSearchCV's best CV params didn't translate to the best test-set performance — a reminder that cross-validation score and held-out test performance aren't always perfectly aligned, especially when models are already close in performance
 Top features (from RF importance): tenure, TotalCharges, Contract_Two year, MonthlyCharges, InternetService_Fiber optic
 - Save best model and preprocessing artifacts
 

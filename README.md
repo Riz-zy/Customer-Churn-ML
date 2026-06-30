@@ -164,19 +164,24 @@ Expected Performance:
 - Best model: Random Forest or Gradient Boosting
 - Metrics to track: Accuracy, Precision, Recall, F1-score, ROC-AUC
 
-Phase 3: API Development & Testing
+Phase 3: API Development & Testing ✅ Complete
 
 # Start the API server
 uvicorn app.main:app --reload
 
 # Visit http://localhost:8000/docs for interactive API documentation
-# Test with sample requests
 
 API Endpoints:
-- GET /health — Health check (returns 200 if running)
+- GET /health — Health check (returns {"status": "ok"})
 - POST /predict — Predict churn for a customer
-  Input: Customer features (age, tenure, monthly_charges, etc.)
-  Output: JSON with churn probability and binary prediction
+  Input: 19 customer fields (demographics, account info, services)
+  Output: {"churn_probability": float, "prediction": 0 or 1}
+
+Progress:
+- [x] src/preprocessing.py — processing_input_data() function (one-hot encode + scale + reindex)
+- [x] src/model.py — ChurnPredictor class (loads model + threshold, exposes predict())
+- [x] app/main.py — FastAPI app with /health and /predict endpoints, Pydantic input validation
+- [x] tests/test_1.py — End-to-end test confirming preprocessing → model → prediction pipeline works
 
 Phase 4: Deployment to Hugging Face Spaces
 

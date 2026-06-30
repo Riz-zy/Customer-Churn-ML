@@ -8,7 +8,7 @@ Predicts the probability that a Telco customer will churn, based on account, bil
 
 - **Algorithm:** Gradient Boosting Classifier (scikit-learn)
 - **Hyperparameters:** `n_estimators=300`, `learning_rate=0.05`, `max_depth=3`, `random_state=9`
-- **Decision threshold:** ~0.46 (tuned to maximize F1-score on the churn class, rather than the default 0.5)
+- **Decision threshold:** ~0.26 (tuned to maximize F1-score on the churn class, rather than the default 0.5)
 - **Training data:** 5,625 customers (80% stratified split)
 - **Test data:** 1,407 customers (20% stratified split)
 

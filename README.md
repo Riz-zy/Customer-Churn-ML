@@ -183,11 +183,21 @@ Progress:
 - [x] app/main.py — FastAPI app with /health and /predict endpoints, Pydantic input validation
 - [x] tests/test_1.py — End-to-end test confirming preprocessing → model → prediction pipeline works
 
-Phase 4: Deployment to Hugging Face Spaces
+Phase 4: Deployment to Hugging Face Spaces ✅ Complete
 
-# Follow notebooks/03_deployment_guide.ipynb for step-by-step instructions
-# Push to Hugging Face Spaces repository
-# Auto-deploy on every git push
+Live API: https://rishiteks-customer-churn-api.hf.space
+
+Progress:
+- [x] Created Docker-based HF Space (rishiteks/customer-churn-api)
+- [x] Slim production requirements.txt — 7 runtime packages only (fastapi, uvicorn, pydantic, scikit-learn, pandas, numpy, joblib)
+- [x] Dockerfile — python:3.11-slim base, non-root user (uid 1000), port 7860, WORKDIR /app
+- [x] Two-repo strategy: GitHub holds source code (no .pkl files); HF Space repo holds deployment artifacts including model binaries
+- [x] Auto-deploys on every git push to HF remote
+
+Endpoints (live):
+- GET  /health  → {"status": "ok"}
+- POST /predict → {"churn_probability": float, "prediction": 0 or 1}
+- GET  /docs    → Interactive Swagger UI
 
 ## Testing
 
@@ -271,12 +281,12 @@ git push origin feature/add-xgboost
 - API Enhancements: /feature_importance, /model_info endpoints
 - Monitoring: Log predictions, track API performance over time
 
-## Documentation Files
+## Documentation Files ✅ Complete
 
-- README.md (this file) — Overview and quick start
-- ARCHITECTURE.md — Data flow, design decisions, preprocessing pipeline
-- notebooks/03_deployment_guide.ipynb — Step-by-step Hugging Face Spaces deployment
-- models/model_card.md — Detailed model performance and metadata
+- [README.md](README.md) — Overview, workflow, and quick start
+- [ARCHITECTURE.md](ARCHITECTURE.md) — Full data flow diagram, component breakdown, design decisions
+- [notebooks/03_deployment_guide.ipynb](notebooks/03_deployment_guide.ipynb) — Step-by-step HF Spaces deployment guide with live API tests
+- [models/model_card.md](models/model_card.md) — Model performance metrics, comparison table, design rationale
 
 ## Contributing
 

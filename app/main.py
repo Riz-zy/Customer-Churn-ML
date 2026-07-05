@@ -39,5 +39,5 @@ def health_check():
 
 @app.post("/predict")
 def predict(customer: CustomerInput):
-    result = predictor.predict(customer.dict())
+    result = predictor.predict(customer.model_dump())
     return result

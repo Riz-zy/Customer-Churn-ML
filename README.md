@@ -1,303 +1,231 @@
-﻿# Customer Churn ML Model and API
-An end-to-end machine learning project that predicts customer churn. Build an ML pipeline, train classification models, and deploy a REST API to production. This project showcases ML fundamentals, production-ready code, and cloud deployment—all highly valued on resumes.
+# Customer Churn ML Model and API
+
+An end-to-end machine learning project that predicts customer churn — from raw data to a live REST API.
+
+**Live API:** https://rishiteks-customer-churn-api.hf.space  
+**GitHub:** https://github.com/Riz-zy/Customer-Churn-ML
+
+---
 
 ## Project Overview
 
-Business Goal: Identify customers at risk of leaving so you can take retention action.
+**Goal:** Identify customers at risk of leaving so a business can take retention action before they go.
 
-Technical Stack:
+**Stack:**
 - Data & Exploration: Pandas, Jupyter
 - ML Models: scikit-learn (Logistic Regression, Random Forest, Gradient Boosting)
 - API: FastAPI + Uvicorn
-- Deployment: Hugging Face Spaces
-- Version Control: Git
+- Deployment: Hugging Face Spaces (Docker)
+
+---
 
 ## Dataset
 
-Source: Telco Customer Churn (Kaggle / UCI ML Repository)
-- Target: Binary classification (churn: yes/no)
-- Features: Customer demographics, account info, services
-- Size: ~7,000 customers, ~20 features
-- Class Balance: ~27% churn rate
+Source: [Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) (Kaggle, blastchar)
+- 7,043 customers, 21 features
+- Target: binary — did the customer churn? (yes/no)
+- Churn rate: 26.5%
+
+---
 
 ## Project Structure
 
-```text
-data/
-├── raw/
-│   └── # Original customer data (never modify)
-│
-├── processed/
-│   └── # Cleaned data ready for modeling
+```
+Customer Churn ML Model and API/
 │
 ├── notebooks/
 │   ├── 01_exploratory_data_analysis.ipynb
-│   │   └── # Load, visualize, understand data
 │   ├── 02_feature_engineering.ipynb
-│   │   └── # Preprocessing, model training
 │   └── 03_deployment_guide.ipynb
-│       └── # Hugging Face Spaces setup
 │
 ├── src/
-│   ├── __init__.py
-│   ├── preprocessing.py
-│   │   └── # Reusable preprocessing functions
-│   ├── model.py
-│   │   └── # ChurnPredictor class
-│   └── utils.py
-│       └── # Helper functions
+│   ├── preprocessing.py       # Applies saved transformers to a single input
+│   └── model.py               # ChurnPredictor class
 │
 ├── app/
-│   └── main.py
-│       └── # FastAPI application
+│   └── main.py                # FastAPI application
 │
 ├── models/
 │   ├── best_model.pkl
-│   │   └── # Trained model
 │   ├── scaler.pkl
-│   │   └── # Fitted StandardScaler
-│   ├── encoder.pkl
-│   │   └── # Fitted categorical encoder
+│   ├── feature_columns.pkl
+│   ├── best_threshold.pkl
 │   └── model_card.md
-│       └── # Model performance metrics
+│
+├── data/
+│   └── raw/                   # Original CSV — never modified
 │
 ├── tests/
-│   └── __init__.py
-│
+├── ARCHITECTURE.md
 ├── requirements.txt
-│   └── # Python dependencies
-│
-├── README.md
-│   └── # This file
-│
-└── ARCHITECTURE.md
-    └── # Data flow & design decisions
+└── README.md
 ```
+
+---
 
 ## Quick Start
 
-Prerequisites
+**Requirements:** Python 3.11+, Git
 
-- Python 3.8+
-- Git
-- pip (Python package manager)
+```bash
+# 1. Clone the repo
+git clone https://github.com/Riz-zy/Customer-Churn-ML
+cd "Customer-Churn-ML"
 
-Local Setup
+# 2. Create and activate a virtual environment
+python -m venv venv
+.\venv\Scripts\Activate.ps1        # Windows PowerShell
+# source venv/bin/activate         # Mac/Linux
 
-1. Clone the repository:
-   git clone <your-repo-url>
-   cd "Customer Churn ML Model and API"
+# 3. Install dependencies
+pip install -r requirements.txt
 
-2. Create a virtual environment:
-   python -m venv venv
+# 4. Download the dataset
+# Go to kaggle.com, search "Telco Customer Churn" by blastchar
+# Place WA_Fn-UseC_-Telco-Customer-Churn.csv in data/raw/
+```
 
-3. Activate the virtual environment:
-   Windows (PowerShell): .\venv\Scripts\Activate.ps1
-   Windows (Command Prompt): venv\Scripts\activate.bat
-   Mac/Linux: source venv/bin/activate
-
-4. Install dependencies:
-   pip install -r requirements.txt
-
-5. Download the dataset:
-   - Go to kaggle.com and search "Telco Customer Churn" by blastchar
-   - Download the CSV directly from the dataset page
-   - Place WA_Fn-UseC_-Telco-Customer-Churn.csv in data/raw/
+---
 
 ## Workflow
 
-Phase 1: Exploratory Data Analysis ✅ Complete
+### Phase 1: Exploratory Data Analysis ✅
 
+```bash
 jupyter notebook
 # Open notebooks/01_exploratory_data_analysis.ipynb
+```
 
 Key findings:
-- Dataset: 7,043 customers, 21 features
-- Churn rate: 26.5% (mild class imbalance)
-- TotalCharges stored as string — must convert to numeric before modeling (small number of rows with empty strings dropped)
-- Contract type and OnlineSecurity are strongest predictors of churn (Cramér's V)
-- tenure negatively correlated with churn — longer-tenured customers less likely to leave
-- MonthlyCharges positively correlated with churn
+- `TotalCharges` was stored as a string — converted to float, rows with empty strings dropped
+- `Contract` type and `OnlineSecurity` are the strongest predictors of churn
+- Longer-tenured customers churn less; higher monthly charges correlate with more churn
 
-Phase 2: Feature Engineering & Model Training ✅ Complete
+---
 
-jupyter notebook
+### Phase 2: Feature Engineering & Modeling ✅
+
+```bash
 # Open notebooks/02_feature_engineering.ipynb
+```
 
-Progress:
-- [x] Step 1: Load data, fix TotalCharges (numeric conversion), drop customerID
-- [x] Step 2: Encode target variable (Churn -> 0/1)
-- [x] Step 3: One-hot encode categorical features (21 → 31 columns after encoding)
-- [x] Step 4: Scale numerical features (StandardScaler on tenure, MonthlyCharges, TotalCharges, SeniorCitizen)
-- [x] Step 5: Train/test split (80/20 stratified — 5,625 train / 1,407 test)
-- [x] Step 6a: Logistic Regression — complete
-- [x] Step 6b: Random Forest — complete
-- [x] Step 6c: Gradient Boosting — complete
-- [x] Step 7: Hyperparameter tuning (GridSearchCV on Gradient Boosting) — complete
-- [x] Step 8: Save model + preprocessing artifacts — complete
+Steps completed:
+- Fixed `TotalCharges`, dropped `customerID`, encoded `Churn` as 0/1
+- One-hot encoded all categorical features (21 → 30 columns)
+- Scaled 4 numerical columns with `StandardScaler` (fit on training set only)
+- 80/20 stratified split — 5,625 train / 1,407 test
+- Trained Logistic Regression, Random Forest, and Gradient Boosting
+- Tuned Gradient Boosting with GridSearchCV
+- Tuned decision threshold via F1-maximization on the precision-recall curve
 
-Saved artifacts (models/):
-- best_model.pkl — Gradient Boosting (n_estimators=300, learning_rate=0.05, max_depth=3)
-- scaler.pkl — fitted StandardScaler (fit on raw tenure/MonthlyCharges/TotalCharges/SeniorCitizen)
-- feature_columns.pkl — list of 30 columns post one-hot-encoding, in training order (needed to align API input)
-- best_threshold.pkl — optimal decision threshold for best_model (~0.46, found via F1-maximization on precision-recall curve)
-- model_card.md — full model documentation (performance, comparison, design decisions)
+**Model comparison:**
 
-Model Comparison (all with optimal threshold tuning):
-| Model                              | Accuracy | Churn Recall | Churn F1 |
-|-------------------------------------|----------|--------------|----------|
-| Logistic Regression                | 75.6%    | 0.80         | 0.63     |
-| Random Forest                      | 75.6%    | 0.80         | 0.64     |
-| Gradient Boosting (manual params)  | 75.7%    | 0.81         | 0.64     |
-| Gradient Boosting (GridSearchCV)   | 76.0%    | 0.77         | 0.63     |
+| Model | Accuracy | Churn Recall | Churn F1 |
+|---|---|---|---|
+| Logistic Regression | 75.6% | 0.80 | 0.63 |
+| Random Forest | 75.6% | 0.80 | 0.64 |
+| Gradient Boosting (manual params) | 75.7% | 0.81 | 0.64 |
+| Gradient Boosting (GridSearchCV) | 76.0% | 0.77 | 0.63 |
 
-Final model selected: Gradient Boosting with manual params (n_estimators=300, learning_rate=0.05, max_depth=3) — chosen over the GridSearchCV-tuned version because it had better recall/F1 on the test set.
+**Final model:** `GradientBoostingClassifier(n_estimators=300, learning_rate=0.05, max_depth=3)`  
+Chosen for its higher churn recall and F1 — the GridSearchCV version had marginally better accuracy but worse recall, which matters more for a retention use case.
 
-Key findings:
-- Threshold optimization had more impact on results than model choice — all four configurations converged to similar performance
-- GridSearchCV's best CV params didn't translate to the best test-set performance — a reminder that cross-validation score and held-out test performance aren't always perfectly aligned, especially when models are already close in performance
-Top features (from RF importance): tenure, TotalCharges, Contract_Two year, MonthlyCharges, InternetService_Fiber optic
-- Save best model and preprocessing artifacts
+**Saved artifacts (`models/`):**
+- `best_model.pkl` — trained Gradient Boosting model
+- `scaler.pkl` — fitted StandardScaler
+- `feature_columns.pkl` — ordered list of 30 columns post one-hot encoding
+- `best_threshold.pkl` — tuned decision threshold (~0.263)
 
-Expected Performance:
-- Baseline accuracy: >70%
-- Best model: Random Forest or Gradient Boosting
-- Metrics to track: Accuracy, Precision, Recall, F1-score, ROC-AUC
+**Top predictors** (Random Forest feature importance): `tenure`, `TotalCharges`, `Contract_Two year`, `MonthlyCharges`, `InternetService_Fiber optic`
 
-Phase 3: API Development & Testing ✅ Complete
+---
 
-# Start the API server
+### Phase 3: API Development ✅
+
+```bash
+# Start the server
 uvicorn app.main:app --reload
 
-# Visit http://localhost:8000/docs for interactive API documentation
+# Docs at http://localhost:8000/docs
+```
 
-API Endpoints:
-- GET /health — Health check (returns {"status": "ok"})
-- POST /predict — Predict churn for a customer
-  Input: 19 customer fields (demographics, account info, services)
-  Output: {"churn_probability": float, "prediction": 0 or 1}
+Endpoints:
+- `GET /health` — returns `{"status": "ok"}`
+- `POST /predict` — takes 19 customer fields, returns churn probability and prediction
 
-Progress:
-- [x] src/preprocessing.py — processing_input_data() function (one-hot encode + scale + reindex)
-- [x] src/model.py — ChurnPredictor class (loads model + threshold, exposes predict())
-- [x] app/main.py — FastAPI app with /health and /predict endpoints, Pydantic input validation
-- [x] tests/test_1.py — End-to-end test confirming preprocessing → model → prediction pipeline works
-
-Phase 4: Deployment to Hugging Face Spaces ✅ Complete
-
-Live API: https://rishiteks-customer-churn-api.hf.space
-
-Progress:
-- [x] Created Docker-based HF Space (rishiteks/customer-churn-api)
-- [x] Slim production requirements.txt — 7 runtime packages only (fastapi, uvicorn, pydantic, scikit-learn, pandas, numpy, joblib)
-- [x] Dockerfile — python:3.11-slim base, non-root user (uid 1000), port 7860, WORKDIR /app
-- [x] Two-repo strategy: GitHub holds source code (no .pkl files); HF Space repo holds deployment artifacts including model binaries
-- [x] Auto-deploys on every git push to HF remote
-
-Endpoints (live):
-- GET  /health  → {"status": "ok"}
-- POST /predict → {"churn_probability": float, "prediction": 0 or 1}
-- GET  /docs    → Interactive Swagger UI
-
-## Testing
-
-Local API Testing
-
-# Ensure virtual environment is activated
-python -c "from app.main import app; print('API imported successfully')"
-
-# Or use curl to test the endpoint:
+Example request:
+```bash
 curl -X POST "http://localhost:8000/predict" \
   -H "Content-Type: application/json" \
-  -d '{"age": 45, "tenure": 24, "monthly_charges": 65.5}'
+  -d '{
+    "gender": "Male",
+    "SeniorCitizen": 0,
+    "Partner": "No",
+    "Dependents": "No",
+    "tenure": 2,
+    "PhoneService": "Yes",
+    "MultipleLines": "No",
+    "InternetService": "Fiber optic",
+    "OnlineSecurity": "No",
+    "OnlineBackup": "No",
+    "DeviceProtection": "No",
+    "TechSupport": "No",
+    "StreamingTV": "No",
+    "StreamingMovies": "No",
+    "Contract": "Month-to-month",
+    "PaperlessBilling": "Yes",
+    "PaymentMethod": "Electronic check",
+    "MonthlyCharges": 70.35,
+    "TotalCharges": 140.70
+  }'
+```
 
-End-to-End Verification
+---
 
-1. Run notebooks end-to-end (no errors)
-2. Train model and save artifacts
-3. Start API server
-4. Test /predict endpoint with sample data
-5. Verify output matches notebook predictions
-6. Deploy to Hugging Face Spaces
-7. Test deployed endpoint
+### Phase 4: Deployment ✅
 
-## Model Performance
+Live at **https://rishiteks-customer-churn-api.hf.space**
 
-[Add metrics after training]
+- Docker-based Hugging Face Space — auto-redeploys on every `git push`
+- Slim production image: 7 runtime packages, `python:3.11-slim` base
+- Model binaries committed directly to the HF Space repo (separate from the GitHub source repo)
 
-- Best Model: [XGBoost / Random Forest / Logistic Regression]
-- Accuracy: [X%]
-- Precision: [X%]
-- Recall: [X%]
-- F1-Score: [X%]
-- ROC-AUC: [X%]
+Endpoints (live):
+- `GET /health`
+- `POST /predict`
+- `GET /docs` — interactive Swagger UI
 
-## Key Decisions & Rationale
+---
 
-Why Random Forest/XGBoost over Logistic Regression?
+### Phase 5: Documentation ✅
 
-- Better handles non-linear relationships and feature interactions
-- Higher accuracy on typical customer churn datasets
-- Scikit-learn models are beginner-friendly and production-ready
+- [ARCHITECTURE.md](ARCHITECTURE.md) — data flow, component breakdown, design decisions
+- [notebooks/03_deployment_guide.ipynb](notebooks/03_deployment_guide.ipynb) — step-by-step deployment guide
+- [models/model_card.md](models/model_card.md) — model performance, comparison, and rationale
 
-Why FastAPI?
+---
 
-- Industry-standard, fast performance
-- Auto-generated API documentation at /docs
-- Built-in data validation with Pydantic
+## Design Decisions
 
-Why Hugging Face Spaces?
+**Why tune the decision threshold?**  
+The default threshold of 0.5 maximizes accuracy. For churn, missing an at-risk customer (false negative) costs more than a false alarm. Tuning to ~0.263 raised churn recall from ~0.60 to 0.81.
 
-- Free deployment (no credit card needed)
-- Automatic Docker containerization
-- Built-in CI/CD (auto-deploys on git push)
-- Perfect for portfolio projects
+**Why save preprocessing artifacts instead of re-fitting at inference?**  
+Re-fitting the scaler on new data would produce different scaling than training — the saved `StandardScaler` guarantees the exact same transformation every time.
 
-Why separate preprocessing from API?
+**Why Gradient Boosting over Logistic Regression?**  
+All models performed within 1% of each other, but Gradient Boosting edged out on the metrics that matter (recall and F1). Threshold tuning had more impact on results than model choice.
 
-- Prevents data leakage (never fit transformers on test data)
-- Ensures consistency: same preprocessing in notebooks and API
-- Makes model production-ready
+**Why FastAPI?**  
+Auto-generated `/docs` UI, Pydantic input validation, and async support out of the box.
 
-## Development Workflow
+**Why Hugging Face Spaces?**  
+Free Docker hosting with automatic CI/CD — no credit card, no server management.
 
-# Create a feature branch
-git checkout -b feature/add-xgboost
-
-# Make changes, commit frequently
-git add src/model.py
-git commit -m "feat: add XGBoost model training"
-
-# Push to GitHub
-git push origin feature/add-xgboost
-
-# Create a pull request, get reviewed, then merge
-
-## Further Enhancements (Optional)
-
-- Class Imbalance Handling: SMOTE or class_weight parameter if F1-score < 0.6
-- Advanced Features: Polynomial features, interaction terms, domain-specific engineering
-- Model Explainability: SHAP values, feature importance plots
-- API Enhancements: /feature_importance, /model_info endpoints
-- Monitoring: Log predictions, track API performance over time
-
-## Documentation Files ✅ Complete
-
-- [README.md](README.md) — Overview, workflow, and quick start
-- [ARCHITECTURE.md](ARCHITECTURE.md) — Full data flow diagram, component breakdown, design decisions
-- [notebooks/03_deployment_guide.ipynb](notebooks/03_deployment_guide.ipynb) — Step-by-step HF Spaces deployment guide with live API tests
-- [models/model_card.md](models/model_card.md) — Model performance metrics, comparison table, design rationale
-
-## Contributing
-
-Contributions welcome! Please:
-1. Create a feature branch
-2. Commit with clear messages
-3. Push and create a pull request
-
+---
 
 ## Contact
 
-Rishikesh Tekavade
+Rishikesh Tekavade  
 - LinkedIn: https://www.linkedin.com/in/rishikesh-tekavade-b865ab1a4/
 - GitHub: https://github.com/Riz-zy
